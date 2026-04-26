@@ -19,6 +19,8 @@ const uri = process.env.MONGO_URL;
 
 const app = express();
 
+
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -232,6 +234,94 @@ app.get("/allOrders", auth, async (req, res) => {
   res.json(allOrders);
 });
 
+
+const { OpenAI } = require("openai");
+
+// AI Portfolio Insights (Support for Grok/Groq)
+// Social Leaderboard
+app.get("/leaderboard", async (req, res) => {
+  try {
+    const users = await UserModel.find({}, "name email balance");
+    const leaderboard = [];
+
+    for (let user of users) {
+      const userHoldings = await HoldingsModel.find({ user: user._id });
+      
+      let totalInvestment = 0;
+      let currentVal = 0;
+
+      userHoldings.forEach(h => {
+        totalInvestment += h.qty * h.avg;
+        // Simulating current value (adding 5-15% random growth for leaderboard variety)
+        currentVal += h.qty * (h.avg * (1 + (Math.random() * 0.2))); 
+      });
+
+      const pnl = currentVal - totalInvestment;
+      const pnlPercent = totalInvestment > 0 ? (pnl / totalInvestment) * 100 : 0;
+
+      leaderboard.push({
+        name: user.name,
+        pnlPercent: pnlPercent.toFixed(2),
+        totalTrades: userHoldings.length,
+        balance: user.balance
+      });
+    }
+
+    // Sort by P&L Percentage
+    leaderboard.sort((a, b) => b.pnlPercent - a.pnlPercent);
+
+    res.json(leaderboard.slice(0, 10)); // Top 10
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching leaderboard" });
+  }
+});
+
+app.post("/portfolio-insights", auth, async (req, res) => {
+  try {
+    const { holdings } = req.body;
+    if (!holdings || holdings.length === 0) {
+      return res.json({ advice: "Your portfolio is empty. Add some stocks to get AI insights!" });
+    }
+
+    const apiKey = process.env.XAI_API_KEY; // Using the same variable name for convenience
+    if (!apiKey) {
+      console.error("AI API Key is missing!");
+      return res.status(500).json({ advice: "AI configuration error. Please check backend .env" });
+    }
+
+    // Auto-detect if it's Groq (gsk_) or xAI
+    const isGroq = apiKey.startsWith("gsk_");
+    const baseURL = isGroq ? "https://api.groq.com/openai/v1" : "https://api.x.ai/v1";
+    const model = isGroq ? "llama-3.3-70b-versatile" : "grok-2-1212";
+
+    console.log(`Using ${isGroq ? "Groq" : "xAI"} with model ${model}`);
+
+    const openai = new OpenAI({
+      apiKey: apiKey,
+      baseURL: baseURL,
+    });
+
+    const portfolioSummary = holdings.map(h => `${h.name}: ${h.qty} shares at avg cost ${h.avg}`).join(", ");
+    
+    const completion = await openai.chat.completions.create({
+      model: model,
+      messages: [
+        { role: "system", content: "You are a professional financial advisor specializing in stock market diversification and risk management." },
+        {
+          role: "user",
+          content: `Analyze this stock portfolio briefly: ${portfolioSummary}. 
+          Provide 2-3 concise, professional sentences of advice regarding diversification and risk. 
+          Focus on sector concentration and overall health. Be direct and helpful.`,
+        },
+      ],
+    });
+
+    res.json({ advice: completion.choices[0].message.content });
+  } catch (err) {
+    console.error("AI Error Detail:", err);
+    res.status(500).json({ advice: "AI advisor is currently offline. Please try again later!" });
+  }
+});
 
 app.post("/newOrder", auth, async (req, res) => {
   try {

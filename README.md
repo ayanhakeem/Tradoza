@@ -7,6 +7,8 @@ Tradoza is a high-performance, full-stack trading dashboard clone of Zerodha, bu
 ## 🚀 Key Features
 
 - **🌙 Midnight Pro Dark Mode**: A premium, high-contrast black and neon interface designed for professional trading focus.
+- **🤖 AI Portfolio Insights**: Intelligent risk analysis powered by **Groq/Grok AI**, providing personalized diversification advice.
+- **🏆 Social Leaderboard**: Real-time ranking of top traders based on P&L percentage, fostering a competitive trading community.
 - **💰 Funds & Wallet System**: Fully functional Add/Withdraw funds logic integrated with portfolio buying power.
 - **📊 Real-time Hybrid Portfolio**: Combines system-default "Market" data with individual user buy/sell actions.
 - **📥 Seeding System**: One-click "Seed Data" to instantly populate empty accounts with market samples.
@@ -86,6 +88,7 @@ Zeroda-MERN/
      ```env
      MONGO_URL=your_mongodb_uri
      JWT_SECRET=your_jwt_secret
+     XAI_API_KEY=your_grok_or_groq_key
      PORT=3002
      ```
    - Run `npm install` and `npm start`

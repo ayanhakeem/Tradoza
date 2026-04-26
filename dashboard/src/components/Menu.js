@@ -98,6 +98,17 @@ const Menu = () => {
           <li>
             <Link
               style={{ textDecoration: "none" }}
+              to="/leaderboard"
+              onClick={() => handleMenuClick(5)}
+            >
+              <p className={selectedMenu === 5 ? activeMenuClass : menuClass}>
+                Leaderboard
+              </p>
+            </Link>
+          </li>
+          <li>
+            <Link
+              style={{ textDecoration: "none" }}
               to="/apps"
               onClick={() => handleMenuClick(6)}
             >

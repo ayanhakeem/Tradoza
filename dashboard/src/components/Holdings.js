@@ -7,6 +7,25 @@ import { VerticalGraph } from "./VerticalGraph";
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
   const [error, setError] = useState("");
+  const [aiAdvice, setAiAdvice] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const handleConsultAI = async () => {
+    setAiLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        "http://localhost:3002/portfolio-insights",
+        { holdings: allHoldings },
+        { headers: { Authorization: token } }
+      );
+      setAiAdvice(res.data.advice);
+    } catch (err) {
+      console.error("AI Fetch error:", err);
+      setAiAdvice("Failed to reach the AI advisor right now.");
+    }
+    setAiLoading(false);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -71,7 +90,32 @@ const Holdings = () => {
 
   return (
     <>
-      <h3 className="title">Holdings ({allHoldings.length})</h3>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h3 className="title">Holdings ({allHoldings.length})</h3>
+        <button 
+          className="btn btn-blue" 
+          onClick={handleConsultAI} 
+          disabled={aiLoading}
+          style={{ fontSize: "12px", padding: "8px 15px", marginBottom: "15px" }}
+        >
+          {aiLoading ? "Analyzing..." : "🤖 Consult AI Insights"}
+        </button>
+      </div>
+
+      {aiAdvice && (
+        <div className="ai-advice-box" style={{ 
+          padding: "15px", 
+          backgroundColor: "var(--card-bg)", 
+          border: "1px solid var(--neon-green)", 
+          borderRadius: "8px",
+          marginBottom: "20px",
+          fontSize: "14px",
+          lineHeight: "1.6",
+          color: "var(--text-color)"
+        }}>
+          <strong>Insight:</strong> {aiAdvice}
+        </div>
+      )}
 
       {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
       

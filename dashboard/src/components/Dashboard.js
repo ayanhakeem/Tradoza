@@ -8,6 +8,7 @@ import Orders from "./Orders";
 import Positions from "./Positions";
 import Summary from "./Summary";
 import WatchList from "./WatchList";
+import Leaderboard from "./Leaderboard";
 import { GeneralContextProvider } from "./GeneralContext";
 import GeneralContext from "./GeneralContext";
 import BuyActionWindow from "./BuyActionWindow";
@@ -25,6 +26,7 @@ const Dashboard = () => {
             <Route path="/holdings" element={<Holdings />} />
             <Route path="/positions" element={<Positions />} />
             <Route path="/funds" element={<Funds />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/apps" element={<Apps />} />
           </Routes>
         </div>
