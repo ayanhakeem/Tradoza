@@ -105,4 +105,4 @@ Zeroda-MERN/
 This project uses `.env` files for configuration. Ensure your local `.env` is never committed to version control.
 
 ---
-**Created with ❤️ by Antigravity**
+**Created with ❤️ by Ayannn!**
