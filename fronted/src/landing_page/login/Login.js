@@ -9,7 +9,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3002/auth/login", {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL || "http://localhost:3002"}/auth/login`, {
         email,
         password,
       });
@@ -17,7 +17,7 @@ const Login = () => {
       if (response.data.success === true) {
         localStorage.setItem("token", response.data.token);
         console.log("Login successful! Redirecting to dashboard...");
-        window.location.href = `http://localhost:3003/?token=${response.data.token}`;
+        window.location.href = `${process.env.REACT_APP_DASHBOARD_URL || "http://localhost:3003"}/?token=${response.data.token}`;
       } else {
         alert("Login failed: " + response.data.message);
       }

@@ -12,7 +12,7 @@ const Summary = () => {
 
     // Fetch Holdings
     axios
-      .get("http://localhost:3002/allHoldings", {
+      .get(`${process.env.REACT_APP_API_URL || "http://localhost:3002"}/allHoldings`, {
         headers: { Authorization: token },
       })
       .then((res) => {
@@ -25,7 +25,7 @@ const Summary = () => {
 
     // Fetch Balance
     axios
-      .get("http://localhost:3002/auth/profile", {
+      .get(`${process.env.REACT_APP_API_URL || "http://localhost:3002"}/auth/profile`, {
         headers: { Authorization: token },
       })
       .then((res) => {
@@ -61,8 +61,8 @@ const Summary = () => {
             onClick={async () => {
               const token = localStorage.getItem("token");
               try {
-                await axios.get("http://localhost:3002/addHoldings", { headers: { Authorization: token } });
-                await axios.get("http://localhost:3002/addPositions", { headers: { Authorization: token } });
+                await axios.get(`${process.env.REACT_APP_API_URL || "http://localhost:3002"}/addHoldings`, { headers: { Authorization: token } });
+                await axios.get(`${process.env.REACT_APP_API_URL || "http://localhost:3002"}/addPositions`, { headers: { Authorization: token } });
                 window.location.reload();
               } catch (e) {
                 alert("Error seeding data");

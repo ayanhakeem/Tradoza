@@ -9,7 +9,7 @@ const Positions = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:3002/allPositions", {
+      .get(`${process.env.REACT_APP_API_URL || "http://localhost:3002"}/allPositions`, {
         headers: { Authorization: token },
       })
       .then((res) => {

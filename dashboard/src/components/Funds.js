@@ -8,7 +8,7 @@ const Funds = () => {
   const fetchBalance = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:3002/auth/profile", {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL || "http://localhost:3002"}/auth/profile`, {
         headers: { Authorization: token },
       });
       if (res.data.success) {
@@ -32,7 +32,7 @@ const Funds = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:3002/auth/add-funds",
+        `${process.env.REACT_APP_API_URL || "http://localhost:3002"}/auth/add-funds`,
         { amount: Number(amount) },
         { headers: { Authorization: token } }
       );
@@ -52,7 +52,7 @@ const Funds = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:3002/auth/withdraw-funds",
+        `${process.env.REACT_APP_API_URL || "http://localhost:3002"}/auth/withdraw-funds`,
         { amount: Number(amount) },
         { headers: { Authorization: token } }
       );

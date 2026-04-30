@@ -23,7 +23,7 @@ const WatchList = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:3002/allHoldings", {
+      .get(`${process.env.REACT_APP_API_URL || "http://localhost:3002"}/allHoldings`, {
         headers: { Authorization: token },
       })
       .then((res) => {

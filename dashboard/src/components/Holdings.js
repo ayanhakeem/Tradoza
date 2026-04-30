@@ -15,7 +15,7 @@ const Holdings = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:3002/portfolio-insights",
+        `${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || "http://localhost:3002"}`}/portfolio-insights`,
         { holdings: allHoldings },
         { headers: { Authorization: token } }
       );
@@ -35,7 +35,7 @@ const Holdings = () => {
     }
 
     axios
-      .get("http://localhost:3002/allHoldings", {
+      .get(`${process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL || "http://localhost:3002"}`}/allHoldings`, {
         headers: { Authorization: token },
       })
       .then((res) => {

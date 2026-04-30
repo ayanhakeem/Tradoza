@@ -10,7 +10,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3002/auth/register", {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL || "http://localhost:3002"}/auth/register`, {
         name,
         email,
         password,
@@ -19,7 +19,7 @@ const Signup = () => {
       if (response.data.success === true) {
         localStorage.setItem("token", response.data.token);
         console.log("Signup successful! Redirecting...");
-        window.location.href = `http://localhost:3003/?token=${response.data.token}`;
+        window.location.href = `${process.env.REACT_APP_DASHBOARD_URL || "http://localhost:3003"}/?token=${response.data.token}`;
       }
     } catch (err) {
       alert("Error: " + (err.response?.data?.message || err.message));
