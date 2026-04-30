@@ -18,7 +18,7 @@ const Home = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       console.warn("No token found! Redirecting back to login...");
-      window.location.href = "http://localhost:3000/login";
+      window.location.href = `${process.env.REACT_APP_FRONTEND_URL || "http://localhost:3000"}/login`;
     } else {
       console.log("Token verified. Loading Dashboard...");
     }
